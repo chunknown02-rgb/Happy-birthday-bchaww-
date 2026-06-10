@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Royal Diamond Birthday 👑💎</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle, #000000, #050505, #000);
+    font-family: 'Poppins', sans-serif;
+    color: gold;
+}
+
+/* FIREWORKS */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* CENTER */
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    width: 80%;
+}
+
+/* TITLE */
+h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 65px;
+    color: gold;
+    text-shadow: 0 0 30px gold;
+}
+
+/* PARAGRAPH */
+p {
+    color: #ffeaa7;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* PHOTO WRAP */
+.photo-wrap{
+    position: relative;
+    display: inline-block;
+    margin: 25px auto;
+}
+
+/* DIAMOND CROWN */
+.crown{
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 38px;
+    filter: drop-shadow(0 0 15px gold);
+    animation: float 2s infinite ease-in-out;
+}
+
+/* floating crown */
+@keyframes float{
+    0% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+    100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* PHOTO */
+.photo{
+    width: 180px;
+    height: 180px;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid gold;
+    box-shadow: 0 0 35px gold;
+    position: relative;
+}
+
+/* IMAGE */
+.photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* DIAMOND SPARKLES */
+.sparkle{
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkleAnim 1.5s infinite;
+    box-shadow: 0 0 10px white;
+}
+
+@keyframes sparkleAnim{
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* BUTTON */
+button{
+    padding: 12px 22px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: gold;
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 20px gold;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="center">
+
+    <h1>Happy Birthday Meerub 👑💎</h1>
+
+    <p>
+        Dear Meerub 💛<br><br>
+
+        You are not just a girl… you are a QUEEN 👑  
+        A diamond soul with golden heart 💎✨  
+        From Zain, this world feels brighter because of you.  
+
+        May your life always shine like fireworks in the sky  
+        and sparkle like diamonds forever 💛  
+    </p>
+
+    <!-- PHOTO + CROWN -->
+    <div class="photo-wrap">
+        <div class="crown">👑💎</div>
+
+        <div class="photo" id="photoBox">
+            <img src="your-photo.jpg" alt="queen">
+        </div>
+    </div>
+
+    <br>
+
+    <button onclick="toggleMusic()">🎵 Play / Pause Music</button>
+</div>
+
+<audio id="music" src="song.mp3"></audio>
+
+<script>
+
+/* MUSIC */
+function toggleMusic(){
+    let m = document.getElementById("music");
+    if(m.paused) m.play();
+    else m.pause();
+}
+
+/* FIREWORKS */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function boom(x,y){
+    for(let i=0;i<120;i++){
+        particles.push({
+            x:x,
+            y:y,
+            angle:Math.random()*Math.PI*2,
+            speed:Math.random()*7+2,
+            alpha:1
+        });
+    }
+}
+
+function animate(){
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+        p.x += Math.cos(p.angle)*p.speed;
+        p.y += Math.sin(p.angle)*p.speed;
+        p.alpha -= 0.006;
+
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,2,0,Math.PI*2);
+        ctx.fillStyle = `rgba(255,215,0,${p.alpha})`;
+        ctx.fill();
+
+        if(p.alpha <= 0){
+            particles.splice(i,1);
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+/* auto fireworks */
+setInterval(()=>{
+    boom(Math.random()*canvas.width, Math.random()*canvas.height/2);
+},400);
+
+/* click fireworks */
+window.addEventListener("click",(e)=>{
+    boom(e.clientX,e.clientY);
+});
+
+/* DIAMOND SPARKLES ON PHOTO */
+function addSparkles(){
+    let box = document.getElementById("photoBox");
+
+    for(let i=0;i<10;i++){
+        let s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.top = Math.random()*180 + "px";
+        s.style.left = Math.random()*180 + "px";
+        box.appendChild(s);
+
+        setTimeout(()=>s.remove(),1500);
+    }
+}
+
+setInterval(addSparkles, 800);
+
+animate();
+
+</script>
+
+</body>
+  </html>
